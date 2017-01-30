@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VehicleRentalsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="MiddleInitial" Type="char" MaxLength="1" />
+    <Property Name="Address1" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="Address2" Type="varchar" MaxLength="255" />
+    <Property Name="City" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="State" Type="char" MaxLength="2" Nullable="false" />
+    <Property Name="Zip" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Phone" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Rate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VehicleClassificationId" Type="int" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="PricePerDay" Type="decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="PricePerWeek" Type="decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="PricePerMonth" Type="decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="PricePerMileOver" Type="decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Vehicle">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VehicleModelId" Type="int" Nullable="false" />
+    <Property Name="Color" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Year" Type="smallint" Nullable="false" />
+    <Property Name="LicensePlate" Type="varchar" MaxLength="50" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+    <Property Name="VIN" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="VehicleClassification">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VehicleMake">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Make" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VehicleModel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VehicleMakeId" Type="int" Nullable="false" />
+    <Property Name="VehicleTypeId" Type="int" Nullable="false" />
+    <Property Name="VehicleClassificationId" Type="int" />
+    <Property Name="Model" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VehicleRental">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="VehicleId" Type="int" Nullable="false" />
+    <Property Name="RateId" Type="int" Nullable="false" />
+    <Property Name="CustomerId" Type="int" Nullable="false" />
+    <Property Name="StartDate" Type="datetime" Nullable="false" />
+    <Property Name="EndDate" Type="datetime" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VehicleType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="DeleteFlag" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Vehicle_VehicleModel">
+    <End Role="VehicleModel" Type="Self.VehicleModel" Multiplicity="1" />
+    <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VehicleModel">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Vehicle">
+        <PropertyRef Name="VehicleModelId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleModel_VehicleClassification">
+    <End Role="VehicleClassification" Type="Self.VehicleClassification" Multiplicity="0..1" />
+    <End Role="VehicleModel" Type="Self.VehicleModel" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VehicleClassification">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VehicleModel">
+        <PropertyRef Name="VehicleClassificationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleModel_VehicleMake">
+    <End Role="VehicleMake" Type="Self.VehicleMake" Multiplicity="1" />
+    <End Role="VehicleModel" Type="Self.VehicleModel" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VehicleMake">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VehicleModel">
+        <PropertyRef Name="VehicleMakeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleModel_VehicleType">
+    <End Role="VehicleType" Type="Self.VehicleType" Multiplicity="1" />
+    <End Role="VehicleModel" Type="Self.VehicleModel" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VehicleType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VehicleModel">
+        <PropertyRef Name="VehicleTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleRental_Customer">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+    <End Role="VehicleRental" Type="Self.VehicleRental" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VehicleRental">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleRental_Rate">
+    <End Role="Rate" Type="Self.Rate" Multiplicity="1" />
+    <End Role="VehicleRental" Type="Self.VehicleRental" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Rate">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VehicleRental">
+        <PropertyRef Name="RateId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_VehicleRental_Vehicle">
+    <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+    <End Role="VehicleRental" Type="Self.VehicleRental" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vehicle">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="VehicleRental">
+        <PropertyRef Name="VehicleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VehicleRentalsModelStoreContainer">
+    <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Rate" EntityType="Self.Rate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Vehicle" EntityType="Self.Vehicle" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VehicleClassification" EntityType="Self.VehicleClassification" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VehicleMake" EntityType="Self.VehicleMake" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VehicleModel" EntityType="Self.VehicleModel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VehicleRental" EntityType="Self.VehicleRental" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VehicleType" EntityType="Self.VehicleType" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Vehicle_VehicleModel" Association="Self.FK_Vehicle_VehicleModel">
+      <End Role="VehicleModel" EntitySet="VehicleModel" />
+      <End Role="Vehicle" EntitySet="Vehicle" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleModel_VehicleClassification" Association="Self.FK_VehicleModel_VehicleClassification">
+      <End Role="VehicleClassification" EntitySet="VehicleClassification" />
+      <End Role="VehicleModel" EntitySet="VehicleModel" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleModel_VehicleMake" Association="Self.FK_VehicleModel_VehicleMake">
+      <End Role="VehicleMake" EntitySet="VehicleMake" />
+      <End Role="VehicleModel" EntitySet="VehicleModel" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleModel_VehicleType" Association="Self.FK_VehicleModel_VehicleType">
+      <End Role="VehicleType" EntitySet="VehicleType" />
+      <End Role="VehicleModel" EntitySet="VehicleModel" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleRental_Customer" Association="Self.FK_VehicleRental_Customer">
+      <End Role="Customer" EntitySet="Customer" />
+      <End Role="VehicleRental" EntitySet="VehicleRental" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleRental_Rate" Association="Self.FK_VehicleRental_Rate">
+      <End Role="Rate" EntitySet="Rate" />
+      <End Role="VehicleRental" EntitySet="VehicleRental" />
+    </AssociationSet>
+    <AssociationSet Name="FK_VehicleRental_Vehicle" Association="Self.FK_VehicleRental_Vehicle">
+      <End Role="Vehicle" EntitySet="Vehicle" />
+      <End Role="VehicleRental" EntitySet="VehicleRental" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
